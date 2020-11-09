@@ -1,0 +1,70 @@
+﻿@page "/students/create"
+@inject HttpClient Http
+@inject Microsoft.AspNetCore.Components.NavigationManager navigation
+@inject IJSRuntime js
+<h1>Create</h1>
+<h3>Students</h3>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="Name" class="control-label">First Name</label>
+                <input for="Name" class="form-control" @bind="@student.FirstName" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Designation" class="control-label">Last Name</label>
+                <input for="Designation" class="form-control" @bind="@student.LastName" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label">Email</label>
+                <input asp-for="Email" class="form-control" @bind="@student.Email" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Location" class="control-label">BCIT ID</label>
+                <input asp-for="Location" class="form-control" @bind="@student.BCIT_ID" />
+            </div>
+            <div class=" form-group">
+                <label asp-for="Phone" class="control-label">Phone</label>
+                <input asp-for="Phone" class="form-control" @bind="@student.MobileNumber" />
+            </div>
+            <div class=" form-group">
+                <label asp-for="Phone" class="control-label">City</label>
+                <input asp-for="Phone" class="form-control" @bind="@student.City" />
+            </div>
+            <div class=" form-group">
+                <label asp-for="Phone" class="control-label">Set</label>
+                <input asp-for="Phone" class="form-control" @bind="@student.Set" />
+            </div>
+            <div class=" form-group">
+                <label asp-for="Phone" class="control-label">Option</label>
+                <input asp-for="Phone" class="form-control" @bind="@student.Option" />
+            </div>
+            <div class="form-group">
+                <input type="submit"
+                       value="Save" @onclick="@(async () => await CreateStudent())"
+                       class="btn btn-success" />
+                <input type="submit" value="Cancel" @onclick="@cancel" class="btn btn-danger" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@code{
+    string baseUrl = "https://localhost:44396/";
+    Student student = new Student();
+    protected async Task CreateStudent()
+    {
+        student.StudentId = Guid.NewGuid().ToString();
+        string endpoint = $"{baseUrl}api/Students";
+
+        Http.PostAsJsonAsync(endpoint, student);
+
+        await js.InvokeVoidAsync("alert", $"Added Successfully!");
+        navigation.NavigateTo("/students");
+    }
+    void cancel()
+    {
+        navigation.NavigateTo("/students");
+    }
+} 

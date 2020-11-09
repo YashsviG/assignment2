@@ -1,0 +1,71 @@
+@page "/students"
+
+@inject HttpClient httpClient
+@inject IJSRuntime js
+
+<h3>Students</h3>
+<small>Add as many developers as you wish.</small>
+<div class="form-group">
+    <a class="btn btn-success" href="/students/create"><i class="oi oi-plus"></i> Add New Student</a>
+</div>
+<br>
+
+@if (students == null)
+{
+    <text>Loading...</text>
+}
+else if (students.Length == 0)
+{
+    <text>No Records Found.</text>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Student student in students)
+            {
+                <tr>
+                    <td>@student.FirstName @student.LastName</td>
+
+                    <td>
+                        <a class="btn btn-success" href="Students/Edit/@student.StudentId">Edit</a>
+                        <button class="btn btn-danger" @onclick="@(() => Delete(student.StudentId))">Delete</button>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}
+@functions  {
+    Student[] students { get; set; }
+    string baseUrl = "https://localhost:44396/";
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await load();
+    }
+
+    protected async Task load()
+    {
+        students = await httpClient.GetFromJsonAsync<Student[]>($"{baseUrl}api/students");
+    }
+
+    async Task Delete(string StudentId)
+    {
+        var student = students.First(x => x.StudentId == StudentId);
+        if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {student.FirstName}'s ({student.StudentId}) Record?"))
+        {
+            await httpClient.DeleteAsync($"{baseUrl}api/students/{StudentId}");
+            await OnInitializedAsync();
+        }
+    }
+}
