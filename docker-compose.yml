@@ -1,0 +1,42 @@
+version: '3'
+
+volumes:
+  datafiles:
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2017-CU8-ubuntu
+    volumes:
+      - datafiles:/var/opt/mssql/data
+    ports:
+      - "1433:1433"
+    restart: always
+    
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: SqlExpress!   
+  mvc:
+    build:
+      context: .
+      dockerfile: StudentAPI/Dockerfile.mvc
+    depends_on:
+      - db
+    ports:
+      - "8000:80"
+      - "8001:443"
+    restart: always
+    environment:
+      - DBHOST=db
+      - DBPORT=1433
+      - DBPASSWORD=SqlExpress!
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  webfrontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+      - "8889:8889"
+    environment:
+      - ASPNETCORE_URLS=https://+/;http://+;

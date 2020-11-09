@@ -51,14 +51,14 @@
 </div>
 
 @code{
-    string baseUrl = "https://localhost:44396/";
+    string baseUrl = "http://localhost:8000/";
     Student student = new Student();
     protected async Task CreateStudent()
     {
         student.StudentId = Guid.NewGuid().ToString();
         string endpoint = $"{baseUrl}api/Students";
 
-        Http.PostAsJsonAsync(endpoint, student);
+        await Http.PostAsJsonAsync(endpoint, student);
 
         await js.InvokeVoidAsync("alert", $"Added Successfully!");
         navigation.NavigateTo("/students");

@@ -56,7 +56,7 @@
 
     [Parameter]
     public string StudentId { get; set; }
-    string baseUrl = "https://localhost:44396/";
+    string baseUrl = "http://localhost:8000/";
     bool preventDefault = false;
     Student student = new Student();
 
@@ -69,7 +69,7 @@
     {
         string endpoint = $"{baseUrl}api/Students/{StudentId}";
 
-        Http.PutAsJsonAsync(endpoint, student);
+        await Http.PutAsJsonAsync(endpoint, student);
         await js.InvokeVoidAsync("alert", $"Updated Successfully!");
 
         navigation.NavigateTo("/students");
