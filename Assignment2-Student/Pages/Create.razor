@@ -58,7 +58,7 @@
         student.StudentId = Guid.NewGuid().ToString();
         string endpoint = $"{baseUrl}api/Students";
 
-        await Http.PostAsJsonAsync(endpoint, student);
+        Http.PostAsJsonAsync(endpoint, student);
 
         await js.InvokeVoidAsync("alert", $"Added Successfully!");
         navigation.NavigateTo("/students");

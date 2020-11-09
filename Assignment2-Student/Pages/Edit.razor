@@ -69,7 +69,7 @@
     {
         string endpoint = $"{baseUrl}api/Students/{StudentId}";
 
-        await Http.PutAsJsonAsync(endpoint, student);
+        Http.PutAsJsonAsync(endpoint, student);
         await js.InvokeVoidAsync("alert", $"Updated Successfully!");
 
         navigation.NavigateTo("/students");
